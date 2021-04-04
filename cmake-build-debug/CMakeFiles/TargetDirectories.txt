@@ -1,0 +1,3 @@
+C:/projects/OpenclProjects/vector_add/cmake-build-debug/CMakeFiles/vector_add.dir
+C:/projects/OpenclProjects/vector_add/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/projects/OpenclProjects/vector_add/cmake-build-debug/CMakeFiles/rebuild_cache.dir
