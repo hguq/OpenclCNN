@@ -1,7 +1,7 @@
 __kernel void conv(
     ulong CI, ulong CO, ulong H, ulong W,  // size
-    __global signed char *weight,
-    __global unsigned char* image,
+    __global const signed char *weight,
+    __global const unsigned char* image,
     __global int *dst){
     // The input shape is [CI, H, W]
     // The weight shape is [CO, CI, 3, 3]
@@ -30,8 +30,8 @@ __kernel void conv(
 
 __kernel void fc(
     ulong CI, ulong CO,
-    __global signed char *weight,
-    __global unsigned char *feature,
+    __global const signed char *weight,
+    __global const unsigned char *feature,
     __global int *dst){
     // The input shape is [CI]
     // The weight shape is [CI, CO]
@@ -48,8 +48,8 @@ __kernel void fc(
 __kernel void quan(
     ulong C, ulong H, ulong W, //if fc, H=W=1
     __global int *bias,
-    __global unsigned char *shift,
-    __global int *feature,
+    __global const unsigned char *shift,
+    __global const int *feature,
     __global signed char* dst){
     // The input shape is [C, H, W]
     // The bias shape is [C]
@@ -65,7 +65,7 @@ __kernel void quan(
 
 __kernel void pool(
     ulong C, ulong H, ulong W, ulong HO, ulong WO,
-    __global unsigned char* feature,
+    __global const unsigned char* feature,
     __global unsigned char* dst){
     
     int ho=get_global_id(0);

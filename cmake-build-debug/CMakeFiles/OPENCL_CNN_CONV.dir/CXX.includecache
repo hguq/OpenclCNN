@@ -7,18 +7,6 @@
 #IncludeRegexTransform: 
 
 C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cnn.h
-string
--
-vector
--
-iostream
--
-fstream
--
-sstream
--
-cassert
--
 CL/opencl.h
 -
 FreeImage/FreeImage.h

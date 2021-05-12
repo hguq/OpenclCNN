@@ -4,22 +4,11 @@
 
 #ifndef OPENCL_CNN_CONV_FUNC_H
 #define OPENCL_CNN_CONV_FUNC_H
-//#define DEBUG
 
 #include <bits/stdc++.h>
 
 using namespace std;
 
-template<class T>
-void print_array(T *arr, int N, const string &s) {
-#ifdef DEBUG
-    cout << "********" << s << "********" << endl;
-    for (int i = 0; i < N; i++) {
-        cout << int(arr[i]) << ' ';
-    }
-    cout << endl;
-#endif
-}
 
 void conv(size_t CI, size_t CO, size_t H, size_t W,
           const signed char *weight,
@@ -45,8 +34,6 @@ void conv(size_t CI, size_t CO, size_t H, size_t W,
             }
         }
     }
-    //print_array(dst, CO * H * W, "conv_res");
-    print_array(weight, CO * CI * 3 * 3, "conv_weight");
 }
 
 void fc(size_t CI, size_t CO,
@@ -60,7 +47,6 @@ void fc(size_t CI, size_t CO,
         }
         dst[co] = acc;
     }
-    print_array(weight, CI*CO, "fc_weight");
 }
 
 void quan(size_t C, size_t H, size_t W,
@@ -78,9 +64,6 @@ void quan(size_t C, size_t H, size_t W,
             }
         }
     }
-    //print_array(dst, C * H * W, "quan_res");
-    print_array(shift, C, "quan_shift");
-    print_array(bias, C, "quan_bias");
 }
 
 void pool(size_t C, size_t H, size_t W, size_t HO, size_t WO,
@@ -102,7 +85,6 @@ void pool(size_t C, size_t H, size_t W, size_t HO, size_t WO,
             }
         }
     }
-    //print_array(dst, C * HO * WO, "pool");
 }
 
 
@@ -117,7 +99,6 @@ void relu(size_t C, size_t H, size_t W,
             }
         }
     }
-    //print_array(dst, C * H * W, "relu");
 }
 
 #endif //OPENCL_CNN_CONV_FUNC_H
