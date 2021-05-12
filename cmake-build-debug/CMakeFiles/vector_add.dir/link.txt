@@ -1,3 +1,0 @@
-C:\programs\clion\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\vector_add.dir/objects.a
-C:\programs\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\ar.exe cr CMakeFiles\vector_add.dir/objects.a @CMakeFiles\vector_add.dir\objects1.rsp
-C:\programs\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\vector_add.dir/objects.a -Wl,--no-whole-archive  -o vector_add.exe -Wl,--out-implib,libvector_add.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\vector_add.dir\linklibs.rsp

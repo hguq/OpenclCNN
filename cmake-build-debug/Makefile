@@ -67,10 +67,10 @@ RM = C:\programs\clion\bin\cmake\win\bin\cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\projects\OpenclProjects\vector_add
+CMAKE_SOURCE_DIR = C:\projects\OpenclProjects\OPENCL_CNN_INTEGER
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\projects\OpenclProjects\vector_add\cmake-build-debug
+CMAKE_BINARY_DIR = C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -99,9 +99,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\projects\OpenclProjects\vector_add\cmake-build-debug\CMakeFiles C:\projects\OpenclProjects\vector_add\cmake-build-debug\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-debug\CMakeFiles C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-debug\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\projects\OpenclProjects\vector_add\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -130,17 +130,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named vector_add
+# Target rules for targets named OPENCL_CNN_CONV
 
 # Build rule for target.
-vector_add: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 vector_add
-.PHONY : vector_add
+OPENCL_CNN_CONV: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 OPENCL_CNN_CONV
+.PHONY : OPENCL_CNN_CONV
 
 # fast build rule for target.
-vector_add/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_add.dir\build.make CMakeFiles/vector_add.dir/build
-.PHONY : vector_add/fast
+OPENCL_CNN_CONV/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/build
+.PHONY : OPENCL_CNN_CONV/fast
 
 main.obj: main.cpp.obj
 
@@ -148,7 +148,7 @@ main.obj: main.cpp.obj
 
 # target to build an object file
 main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_add.dir\build.make CMakeFiles/vector_add.dir/main.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/main.cpp.obj
 .PHONY : main.cpp.obj
 
 main.i: main.cpp.i
@@ -157,7 +157,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_add.dir\build.make CMakeFiles/vector_add.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -166,7 +166,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\vector_add.dir\build.make CMakeFiles/vector_add.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -177,7 +177,7 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... vector_add
+	@echo ... OPENCL_CNN_CONV
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

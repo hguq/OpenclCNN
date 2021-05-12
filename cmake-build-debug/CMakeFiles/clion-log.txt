@@ -1,4 +1,4 @@
-C:\programs\clion\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\projects\OpenclProjects\vector_add
+C:\programs\clion\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\projects\OpenclProjects\OPENCL_CNN_INTEGER
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/projects/OpenclProjects/vector_add/cmake-build-debug
+-- Build files have been written to: C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cmake-build-debug
