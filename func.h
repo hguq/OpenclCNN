@@ -10,7 +10,7 @@
 using namespace std;
 
 
-void conv(size_t CI, size_t CO, size_t H, size_t W,
+void cpu_conv(size_t CI, size_t CO, size_t H, size_t W,
           const signed char *weight,
           const unsigned char *image,
           int32_t *dst) {
@@ -36,7 +36,7 @@ void conv(size_t CI, size_t CO, size_t H, size_t W,
     }
 }
 
-void fc(size_t CI, size_t CO,
+void cpu_fc(size_t CI, size_t CO,
         const signed char *weight,
         const unsigned char *feature,
         int32_t *dst) {
@@ -49,7 +49,7 @@ void fc(size_t CI, size_t CO,
     }
 }
 
-void quan(size_t C, size_t H, size_t W,
+void cpu_quan(size_t C, size_t H, size_t W,
           const int32_t *bias,
           const unsigned char *shift,
           const int32_t *feature,
@@ -66,7 +66,7 @@ void quan(size_t C, size_t H, size_t W,
     }
 }
 
-void pool(size_t C, size_t H, size_t W, size_t HO, size_t WO,
+void cpu_pool(size_t C, size_t H, size_t W, size_t HO, size_t WO,
           unsigned char *feature,
           unsigned char *dst) {
     for (int c = 0; c < C; c++) {
@@ -88,7 +88,7 @@ void pool(size_t C, size_t H, size_t W, size_t HO, size_t WO,
 }
 
 
-void relu(size_t C, size_t H, size_t W,
+void cpu_relu(size_t C, size_t H, size_t W,
           signed char *feature,
           unsigned char *dst) {
     for (int c = 0; c < C; c++) {
