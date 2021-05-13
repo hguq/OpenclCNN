@@ -44,7 +44,7 @@ int main() {
     cnn cnn_instance(1, 28, 28, 10, "../kernel.cl", "../model.txt");
 
     int correct = 0;
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < N_IMAGES; i++) {
         int result = cnn_instance.opencl_forward(images[i]);
         if (result == labels[i])++correct;
     }
