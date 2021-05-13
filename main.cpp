@@ -45,7 +45,7 @@ int main() {
 
     int correct = 0;
     for (int i = 0; i < 100; i++) {
-        int result = cnn_instance.cpu_forward(images[i]);
+        int result = cnn_instance.opencl_forward(images[i]);
         if (result == labels[i])++correct;
     }
     cout << (correct);

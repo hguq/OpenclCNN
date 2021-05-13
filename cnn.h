@@ -14,6 +14,16 @@ using namespace std;
 int ret;
 #define check assert(ret==0);
 
+template<class T>
+void assert_array(T *A, T *B, size_t N) {
+    for (int n = 0; n < N; n++) {
+        if (A[n] != B[n]) {
+            cout<<"Wrong"<<endl;
+        }
+    }
+
+}
+
 class layer {
 public:
     // Opencl related variables ( pointers )
@@ -33,18 +43,16 @@ public:
     size_t *global_work_size = nullptr;
     size_t *local_work_size = nullptr;
 
-
     // Initialize the layer
     // pass program and let subsidiary classes create kernels by themselves.
-    layer(cl_command_queue command_queue_) : command_queue(command_queue_) {}
-
-    // Pure virtual function that do opencl_forward propagation.
-    // Calculate result and put result in "opencl_out" buffer, and return it.
-    virtual cl_mem opencl_forward(cl_mem input) = 0;
+    explicit layer(cl_command_queue command_queue_) : command_queue(command_queue_) {}
 
     // Pure virtual function that do cpu forward propagation.
     virtual void *cpu_forward(void *input) = 0;
 
+    // Pure virtual function that do opencl_forward propagation.
+    // Calculate result and put result in "opencl_out" buffer, and return it.
+    virtual cl_mem opencl_forward(void *cpu_in, cl_mem opencl_in) = 0;
 
     virtual ~layer() {
         for (auto ptr:allocated) {
@@ -92,12 +100,20 @@ public:
 
     }
 
+    void *cpu_forward(void *input) override {
+        // Call cpu version conv function here
+        cpu_conv(CI, CO, H, W,
+                 (const signed char *) cpu_weight, (const unsigned char *) input, (int32_t *) cpu_out);
+        return cpu_out;
+    }
+
     //  Set argument and execute kernel.
-    cl_mem opencl_forward(cl_mem input) override {
+    cl_mem opencl_forward(void *cpu_in, cl_mem opencl_in) override {
         // input is unsigned char
         // unsigned char *+ signed char -> int32_t
         // Set kernel argument
         // Because the arguments never change, so specify them in constructor.
+        cpu_forward(cpu_in);// The result is stored in local cpu_out
         ret = clSetKernelArg(kernel, 0, sizeof(cl_ulong), &CI);
         check
         ret = clSetKernelArg(kernel, 1, sizeof(cl_ulong), &CO);
@@ -108,9 +124,10 @@ public:
         check
         ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), &opencl_weight);
         check
-        ret = clSetKernelArg(kernel, 5, sizeof(cl_mem), &input);
+        ret = clSetKernelArg(kernel, 5, sizeof(cl_mem), &opencl_in);
         check
         ret = clSetKernelArg(kernel, 6, sizeof(cl_mem), &opencl_out);
+        check
         // Execute kernel
         ret = clEnqueueNDRangeKernel(command_queue,
                                      kernel,
@@ -123,16 +140,14 @@ public:
                                      nullptr // Bounding event
         );
         check
+
+        auto opencl_out_copy = new int32_t[CO * H * W];
+        clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, CO * H * W * sizeof(int32_t),
+                            opencl_out_copy, 0, nullptr, nullptr);
+        assert_array((int32_t *) cpu_out, (int32_t *) opencl_out_copy, CO * H * W);
         return opencl_out;
     }
 
-    void *cpu_forward(void *input) override {
-        // Call cpu version conv function here
-        cpu_conv(CI, CO, H, W,
-                 (const signed char *) cpu_weight, (const unsigned char *) input, (int32_t *) cpu_out);
-
-        return cpu_out;
-    }
 
     ~conv_layer() override {
         delete[] cpu_weight;
@@ -174,7 +189,8 @@ public:
         local_work_size = nullptr;
     }
 
-    cl_mem opencl_forward(cl_mem input) override {
+    cl_mem opencl_forward(void *cpu_in, cl_mem opencl_in) override {
+        cpu_forward(cpu_in);
         // Set arguments
         ret = clSetKernelArg(kernel, 0, sizeof(cl_ulong), &CI);
         check
@@ -182,7 +198,7 @@ public:
         check
         ret = clSetKernelArg(kernel, 2, sizeof(cl_mem), &opencl_weight);
         check
-        ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), &input);
+        ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), &opencl_in);
         check
         ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), &opencl_out);
         check
@@ -199,6 +215,12 @@ public:
                                      nullptr // Bounding event
         );
         check
+
+        auto opencl_out_copy = new int32_t[CO];
+        clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, CO * sizeof(int32_t),
+                            opencl_out_copy, 0, nullptr, nullptr);
+        assert_array((int32_t *) cpu_out, (int32_t *) opencl_out_copy, CO);
+
         return opencl_out;
     }
 
@@ -255,7 +277,8 @@ public:
         local_work_size = nullptr;
     }
 
-    cl_mem opencl_forward(cl_mem input) override {
+    cl_mem opencl_forward(void *cpu_in, cl_mem opencl_in) override {
+        cpu_forward(cpu_in);
         // Set kernel arguments
         ret = clSetKernelArg(kernel, 0, sizeof(cl_ulong), &C);
         check
@@ -267,7 +290,7 @@ public:
         check
         ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), &opencl_shift);
         check
-        ret = clSetKernelArg(kernel, 5, sizeof(cl_mem), &input);
+        ret = clSetKernelArg(kernel, 5, sizeof(cl_mem), &opencl_in);
         check
         ret = clSetKernelArg(kernel, 6, sizeof(cl_mem), &opencl_out);
         check
@@ -284,6 +307,10 @@ public:
                                      nullptr // Bounding event
         );
         check
+        auto opencl_out_copy = new signed char[C * H * W];
+        clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, C * H * W * sizeof(signed char),
+                            opencl_out_copy, 0, nullptr, nullptr);
+        assert_array((signed char *) cpu_out, (signed char *) opencl_out_copy, C * H * W);
         return opencl_out;
     }
 
@@ -334,7 +361,8 @@ public:
         local_work_size = nullptr;
     }
 
-    cl_mem opencl_forward(cl_mem input) override {
+    cl_mem opencl_forward(void *cpu_in, cl_mem opencl_in) override {
+        cpu_forward(cpu_in);
         // Set kernel arguments
         ret = clSetKernelArg(kernel, 0, sizeof(cl_ulong), &C);
         check
@@ -346,7 +374,7 @@ public:
         check
         ret = clSetKernelArg(kernel, 4, sizeof(cl_ulong), &WO);
         check
-        ret = clSetKernelArg(kernel, 5, sizeof(cl_mem), &input);
+        ret = clSetKernelArg(kernel, 5, sizeof(cl_mem), &opencl_in);
         check
         ret = clSetKernelArg(kernel, 6, sizeof(cl_mem), &opencl_out);
         check
@@ -363,6 +391,10 @@ public:
                                      nullptr // Bounding event
         );
         check
+        auto opencl_out_copy = new unsigned char[C * H * W];
+        clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, C * H * W * sizeof(unsigned char),
+                            opencl_out_copy, 0, nullptr, nullptr);
+        assert_array((unsigned char *) cpu_out, (unsigned char *) opencl_out_copy, C * H * W);
         return opencl_out;
     }
 
@@ -389,7 +421,7 @@ public:
         check
 
         // Allocate space for cpu output
-        cpu_out = new signed char[C * H * W];
+        cpu_out = new unsigned char[C * H * W];
 
         // Create opencl_weight and result buffer;
         opencl_out = clCreateBuffer(context_, CL_MEM_READ_WRITE, C * H * W * sizeof(signed char), nullptr, nullptr);
@@ -401,7 +433,8 @@ public:
         local_work_size = nullptr;
     }
 
-    cl_mem opencl_forward(cl_mem input) override {
+    cl_mem opencl_forward(void *cpu_in, cl_mem opencl_in) override {
+        cpu_forward(cpu_in);
         // Set kernel arguments
         ret = clSetKernelArg(kernel, 0, sizeof(cl_ulong), &C);
         check
@@ -409,7 +442,7 @@ public:
         check
         ret = clSetKernelArg(kernel, 2, sizeof(cl_ulong), &W);
         check
-        ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), &input);
+        ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), &opencl_in);
         check
         ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), &opencl_out);
         check
@@ -426,6 +459,10 @@ public:
                                      nullptr // Bounding event
         );
         check
+        auto opencl_out_copy = new unsigned char[C * H * W];
+        clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, C * H * W * sizeof(unsigned char),
+                            opencl_out_copy, 0, nullptr, nullptr);
+        assert_array((unsigned char *) cpu_out, (unsigned char *) opencl_out_copy, C * H * W);
         return opencl_out;
     }
 
@@ -638,9 +675,13 @@ public:
                                    IMAGE_C * IMAGE_H * IMAGE_W * sizeof(unsigned char),
                                    image, 0, nullptr, nullptr);
         check
-        cl_mem cur = opencl_in;
-        for (auto layer:layers)
-            cur = layer->opencl_forward(cur);
+        cl_mem opencl_cur = opencl_in;
+        void *cpu_cur = image;
+        for (auto layer:layers) {
+            opencl_cur = layer->opencl_forward(cpu_cur, opencl_cur);
+            cpu_cur = layer->cpu_out;
+        }
+
         ret = clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, FEATURE * sizeof(signed char),
                                   cpu_out, 0, nullptr, nullptr);
         check
