@@ -18,7 +18,7 @@ template<class T>
 void assert_array(T *A, T *B, size_t N) {
     for (int n = 0; n < N; n++) {
         if (A[n] != B[n]) {
-            cout<<"Wrong"<<endl;
+            cout << "Wrong" << endl;
         }
     }
 
@@ -392,9 +392,9 @@ public:
         );
         check
         auto opencl_out_copy = new unsigned char[C * H * W];
-        clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, C * H * W * sizeof(unsigned char),
+        clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, C * HO * WO * sizeof(unsigned char),
                             opencl_out_copy, 0, nullptr, nullptr);
-        assert_array((unsigned char *) cpu_out, (unsigned char *) opencl_out_copy, C * H * W);
+        assert_array((unsigned char *) cpu_out, (unsigned char *) opencl_out_copy, C * HO * WO);
         return opencl_out;
     }
 
@@ -424,12 +424,12 @@ public:
         cpu_out = new unsigned char[C * H * W];
 
         // Create opencl_weight and result buffer;
-        opencl_out = clCreateBuffer(context_, CL_MEM_READ_WRITE, C * H * W * sizeof(signed char), nullptr, nullptr);
+        opencl_out = clCreateBuffer(context_, CL_MEM_READ_WRITE, C * H * W * sizeof(unsigned char), nullptr, nullptr);
 
         allocated.push_back(opencl_out);
 
         // Specify work dimension
-        global_work_size = new size_t[3]{C, H, W};
+        global_work_size = new size_t[3]{H, W, C};
         local_work_size = nullptr;
     }
 
@@ -641,7 +641,6 @@ public:
         // Release.
         // Kernels will be released in the deconstruct function of layers
         clReleaseMemObject(opencl_in);
-        clReleaseMemObject(opencl_out);
         clReleaseProgram(program);
         clReleaseCommandQueue(command_queue);
         clReleaseContext(context);
@@ -682,6 +681,7 @@ public:
             cpu_cur = layer->cpu_out;
         }
 
+        opencl_out = opencl_cur;
         ret = clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, FEATURE * sizeof(signed char),
                                   cpu_out, 0, nullptr, nullptr);
         check

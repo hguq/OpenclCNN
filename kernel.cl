@@ -25,7 +25,7 @@ __kernel void conv(
             }
         }
     }
-    dst[co*H*W+h*W+w]+=acc;
+    dst[co*H*W+h*W+w]=acc;
 }
 
 __kernel void fc(
@@ -94,7 +94,7 @@ __kernel void relu(
         int w=get_global_id(1);
         int c=get_global_id(2);
         int pos=c*H*W+h*W+w;
-        //dst[pos]=max(0, feature[pos]);
-        if(feature[pos]>=0) dst[pos]=feature[pos];
-        else dst[pos]=0;
+        dst[pos]=max(0, feature[pos]);
+        //if(feature[pos]>=0) dst[pos]=feature[pos];
+        //else dst[pos]=0;
 }
