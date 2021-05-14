@@ -72,7 +72,7 @@ CMAKE_BINARY_DIR = C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-deb
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/OPENCL_CNN_CONV.dir/all
+all: CMakeFiles/OPENCL_CNN_INTEGER.dir/all
 
 .PHONY : all
 
@@ -82,36 +82,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/OPENCL_CNN_CONV.dir/clean
+clean: CMakeFiles/OPENCL_CNN_INTEGER.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/OPENCL_CNN_CONV.dir
+# Target rules for target CMakeFiles/OPENCL_CNN_INTEGER.dir
 
 # All Build rule for target.
-CMakeFiles/OPENCL_CNN_CONV.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-debug\CMakeFiles --progress-num=1,2 "Built target OPENCL_CNN_CONV"
-.PHONY : CMakeFiles/OPENCL_CNN_CONV.dir/all
+CMakeFiles/OPENCL_CNN_INTEGER.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_INTEGER.dir\build.make CMakeFiles/OPENCL_CNN_INTEGER.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_INTEGER.dir\build.make CMakeFiles/OPENCL_CNN_INTEGER.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-debug\CMakeFiles --progress-num=1,2 "Built target OPENCL_CNN_INTEGER"
+.PHONY : CMakeFiles/OPENCL_CNN_INTEGER.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/OPENCL_CNN_CONV.dir/rule: cmake_check_build_system
+CMakeFiles/OPENCL_CNN_INTEGER.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-debug\CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/OPENCL_CNN_CONV.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/OPENCL_CNN_INTEGER.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\projects\OpenclProjects\OPENCL_CNN_INTEGER\cmake-build-debug\CMakeFiles 0
-.PHONY : CMakeFiles/OPENCL_CNN_CONV.dir/rule
+.PHONY : CMakeFiles/OPENCL_CNN_INTEGER.dir/rule
 
 # Convenience name for target.
-OPENCL_CNN_CONV: CMakeFiles/OPENCL_CNN_CONV.dir/rule
+OPENCL_CNN_INTEGER: CMakeFiles/OPENCL_CNN_INTEGER.dir/rule
 
-.PHONY : OPENCL_CNN_CONV
+.PHONY : OPENCL_CNN_INTEGER
 
 # clean rule for target.
-CMakeFiles/OPENCL_CNN_CONV.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/clean
-.PHONY : CMakeFiles/OPENCL_CNN_CONV.dir/clean
+CMakeFiles/OPENCL_CNN_INTEGER.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_INTEGER.dir\build.make CMakeFiles/OPENCL_CNN_INTEGER.dir/clean
+.PHONY : CMakeFiles/OPENCL_CNN_INTEGER.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

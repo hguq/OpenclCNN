@@ -11,8 +11,8 @@ using namespace std;
 
 
 void cpu_conv(size_t CI, size_t CO, size_t H, size_t W,
-          const signed char *weight,
-          const unsigned char *image,
+          const int8_t *weight,
+          const uint8_t *image,
           int32_t *dst) {
     for (int co = 0; co < CO; co++) {
         for (int h = 0; h < H; h++) {
@@ -37,8 +37,8 @@ void cpu_conv(size_t CI, size_t CO, size_t H, size_t W,
 }
 
 void cpu_fc(size_t CI, size_t CO,
-        const signed char *weight,
-        const unsigned char *feature,
+        const int8_t *weight,
+        const uint8_t *feature,
         int32_t *dst) {
     for (int co = 0; co < CO; co++) {
         int acc = 0;
@@ -51,9 +51,9 @@ void cpu_fc(size_t CI, size_t CO,
 
 void cpu_quan(size_t C, size_t H, size_t W,
           const int32_t *bias,
-          const unsigned char *shift,
+          const uint8_t *shift,
           const int32_t *feature,
-          signed char *dst) {
+          int8_t *dst) {
 
     for (int h = 0; h < H; h++) {
         for (int w = 0; w < W; w++) {
@@ -67,12 +67,12 @@ void cpu_quan(size_t C, size_t H, size_t W,
 }
 
 void cpu_pool(size_t C, size_t H, size_t W, size_t HO, size_t WO,
-          unsigned char *feature,
-          unsigned char *dst) {
+          uint8_t *feature,
+          uint8_t *dst) {
     for (int c = 0; c < C; c++) {
         for (int ho = 0; ho < HO; ho++) {
             for (int wo = 0; wo < WO; wo++) {
-                unsigned char result = 0;
+                uint8_t result = 0;
                 for (int dh = 0; dh <= 1; dh++) {
                     for (int dw = 0; dw <= 1; dw++) {
                         int h = ho * 2 + dh, w = wo * 2 + dw;
@@ -89,13 +89,13 @@ void cpu_pool(size_t C, size_t H, size_t W, size_t HO, size_t WO,
 
 
 void cpu_relu(size_t C, size_t H, size_t W,
-          signed char *feature,
-          unsigned char *dst) {
+          int8_t *feature,
+          uint8_t *dst) {
     for (int c = 0; c < C; c++) {
         for (int h = 0; h < H; h++) {
             for (int w = 0; w < W; w++) {
                 int pos = c * H * W + h * W + w;
-                dst[pos] = max((signed char) 0, feature[pos]);
+                dst[pos] = max((int8_t) 0, feature[pos]);
             }
         }
     }

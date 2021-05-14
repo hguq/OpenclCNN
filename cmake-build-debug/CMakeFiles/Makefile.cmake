@@ -53,5 +53,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/OPENCL_CNN_CONV.dir/DependInfo.cmake"
+  "CMakeFiles/OPENCL_CNN_INTEGER.dir/DependInfo.cmake"
   )

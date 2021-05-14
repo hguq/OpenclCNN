@@ -162,7 +162,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=OPENCL_CNN_CONV
+CMAKE_PROJECT_NAME:STATIC=OPENCL_CNN_INTEGER
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=C:/programs/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/ranlib.exe
@@ -249,6 +249,12 @@ OPENCL_CNN_CONV_BINARY_DIR:STATIC=C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/
 
 //Value Computed by CMake
 OPENCL_CNN_CONV_SOURCE_DIR:STATIC=C:/projects/OpenclProjects/OPENCL_CNN_INTEGER
+
+//Value Computed by CMake
+OPENCL_CNN_INTEGER_BINARY_DIR:STATIC=C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cmake-build-debug
+
+//Value Computed by CMake
+OPENCL_CNN_INTEGER_SOURCE_DIR:STATIC=C:/projects/OpenclProjects/OPENCL_CNN_INTEGER
 
 //Value Computed by CMake
 matrix_mul_optimize_BINARY_DIR:STATIC=C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cmake-build-debug

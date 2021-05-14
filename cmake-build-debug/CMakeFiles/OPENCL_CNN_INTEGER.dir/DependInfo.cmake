@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/main.cpp" "C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cmake-build-debug/CMakeFiles/OPENCL_CNN_CONV.dir/main.cpp.obj"
+  "C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/main.cpp" "C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cmake-build-debug/CMakeFiles/OPENCL_CNN_INTEGER.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -6,9 +6,20 @@ __kernel void conv(
     // The input shape is [CI, H, W]
     // The weight shape is [CO, CI, 3, 3]
     // The output shape is [CO, H, W]
+    // Use local cache to store weight
+    // For position [co, h, w], only weight[co, :, :, :] will be used, so just load weight[co, :, :, :]
+    // In fact, H*W is always bigger than CI * 3 * 3, so position[co, h, w] will load weight[co*CI*3*3+h*W+w]
     int h=get_global_id(0);
     int w=get_global_id(1);
     int co=get_global_id(2);
+
+    __local signed char weight_cache[16 * 3 * 3]; // store weight for weight[co, :, :, :]
+
+    if(h*W+w<CI*3*3){
+        // load weight
+        weight_cache[h*W+w]=weight[co*CI*3*3+h*W+w];
+    }
+    barrier(CLK_LOCAL_MEM_FENCE);
 
     int acc=0;
     for(int dw=-1;dw<=1;dw++){
@@ -17,7 +28,7 @@ __kernel void conv(
             int hhh=dh+1, www=dw+1;
             if(ww>=0 && ww<W && hh>=0 && hh<H){
                 for(int ci=0;ci<CI;ci++){
-                    acc+=weight[co*CI*3*3+ci*3*3+hhh*3+www]*image[ci*H*W+hh*W+ww];
+                    acc+=weight_cache[ci*3*3+hhh*3+www]*image[ci*H*W+hh*W+ww];
                 }
             }
         }

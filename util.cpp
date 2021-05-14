@@ -25,11 +25,11 @@ void load_one_image(const string &file_path, void *buffer, size_t &w, size_t &h)
     FreeImage_Unload(image);
 }
 
-void load_mnist(int N, const string &file_list, const string &image_dir, unsigned char images[][784], int *labels) {
+void load_mnist(int N, const string &file_list, const string &image_dir, uint8_t images[][784], int *labels) {
     ifstream fs(file_list);
     string file;
     // 图片需要翻转一下，零坐标点在左上角，这样才符合神经网络的输入的权重的输入模式
-    unsigned char temp[1 * 28 * 28 * 4];
+    uint8_t temp[1 * 28 * 28 * 4];
     for (int n = 0; n < N; n++) {
         fs >> file;
         labels[n] = file[5] - '0';
@@ -45,7 +45,7 @@ void load_mnist(int N, const string &file_list, const string &image_dir, unsigne
     }
 }
 
-void print_one_images(int images[][784], int i) {
+void print_one_images(uint8_t images[][784], int i) {
     static ofstream fs("../images.txt");
     for (int row = 0; row < 28; row++) {
         for (int col = 0; col < 28; col++) {

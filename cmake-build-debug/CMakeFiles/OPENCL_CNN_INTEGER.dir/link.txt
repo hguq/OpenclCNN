@@ -1,0 +1,3 @@
+C:\programs\clion\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\OPENCL_CNN_INTEGER.dir/objects.a
+C:\programs\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\ar.exe cr CMakeFiles\OPENCL_CNN_INTEGER.dir/objects.a @CMakeFiles\OPENCL_CNN_INTEGER.dir\objects1.rsp
+C:\programs\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\OPENCL_CNN_INTEGER.dir/objects.a -Wl,--no-whole-archive  -o OPENCL_CNN_INTEGER.exe -Wl,--out-implib,libOPENCL_CNN_INTEGER.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\OPENCL_CNN_INTEGER.dir\linklibs.rsp

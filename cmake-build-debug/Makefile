@@ -130,17 +130,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named OPENCL_CNN_CONV
+# Target rules for targets named OPENCL_CNN_INTEGER
 
 # Build rule for target.
-OPENCL_CNN_CONV: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 OPENCL_CNN_CONV
-.PHONY : OPENCL_CNN_CONV
+OPENCL_CNN_INTEGER: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 OPENCL_CNN_INTEGER
+.PHONY : OPENCL_CNN_INTEGER
 
 # fast build rule for target.
-OPENCL_CNN_CONV/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/build
-.PHONY : OPENCL_CNN_CONV/fast
+OPENCL_CNN_INTEGER/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_INTEGER.dir\build.make CMakeFiles/OPENCL_CNN_INTEGER.dir/build
+.PHONY : OPENCL_CNN_INTEGER/fast
 
 main.obj: main.cpp.obj
 
@@ -148,7 +148,7 @@ main.obj: main.cpp.obj
 
 # target to build an object file
 main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/main.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_INTEGER.dir\build.make CMakeFiles/OPENCL_CNN_INTEGER.dir/main.cpp.obj
 .PHONY : main.cpp.obj
 
 main.i: main.cpp.i
@@ -157,7 +157,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_INTEGER.dir\build.make CMakeFiles/OPENCL_CNN_INTEGER.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -166,7 +166,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_CONV.dir\build.make CMakeFiles/OPENCL_CNN_CONV.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OPENCL_CNN_INTEGER.dir\build.make CMakeFiles/OPENCL_CNN_INTEGER.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -177,7 +177,7 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... OPENCL_CNN_CONV
+	@echo ... OPENCL_CNN_INTEGER
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

@@ -4,29 +4,39 @@
 
 using namespace std;
 
+const char IMAGE_DIR[] = "C:/projects/datasets/mnist/test_images/";
+const char IMAGE_LIST_FILE[] = "../image_list.txt";
+const char KERNEL_FILE[] = "../kernel.cl";
+const char MODEL_FILE[] = "../model.txt";
 const int N_IMAGES = 10000;
 const int N_TESTS = 10000;
-unsigned char images[N_IMAGES][1 * 28 * 28];
+uint8_t images[N_IMAGES][1 * 28 * 28];
 int labels[N_IMAGES];
 
 
 int main() {
-    load_mnist(N_IMAGES, "../image_list.txt", "../test_images/", images, labels);
-    cnn cnn_instance(1, 28, 28, 10, "../kernel.cl", "../model.txt");
+    load_mnist(N_IMAGES, IMAGE_LIST_FILE, IMAGE_DIR, images, labels);
+    cnn cnn_instance(1, 28, 28, 10,
+                     KERNEL_FILE, MODEL_FILE);
 
     int correct = 0;
-    start_timer();
+    //start_timer();
     for (int i = 0; i < N_TESTS; i++)if (cnn_instance.opencl_forward(images[i]) == labels[i])++correct;
-    float time = end_timer();
+    //float time = end_timer();
 
-    cout << "OPENCL TIME: " << time << " sec." << endl;
+    //cout << "OPENCL TIME: " << time << " sec." << endl;
     cout << "OPENCL CORRECT: " << correct << '/' << N_TESTS << endl;
+    cnn_instance.report_opencl_time();
 
-    correct=0;
-    start_timer();
+    correct = 0;
+    //start_timer();
     for (int i = 0; i < N_TESTS; i++)if (cnn_instance.cpu_forward(images[i]) == labels[i])++correct;
-    time = end_timer();
+    //time = end_timer();
 
-    cout << "CPU TIME: " << time << " sec." << endl;
+    //cout << "CPU TIME: " << time << " sec." << endl;
     cout << "CPU CORRECT: " << correct << '/' << N_TESTS << endl;
+
+    cnn_instance.report_cpu_time();
+
+    return 0;
 }

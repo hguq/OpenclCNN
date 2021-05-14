@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
-project(OPENCL_CNN_CONV)
+project(OPENCL_CNN_INTEGER)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(./)
-link_directories(CL)
-add_executable(OPENCL_CNN_CONV main.cpp)
-target_link_libraries(OPENCL_CNN_CONV OpenCL.lib FreeImage.lib)
+add_executable(OPENCL_CNN_INTEGER main.cpp)
+target_link_libraries(OPENCL_CNN_INTEGER OpenCL.lib FreeImage.lib)

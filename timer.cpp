@@ -18,7 +18,7 @@ void start_timer() {
 }
 
 //return in second
-float end_timer() {
+double end_timer() {
     ed = system_clock::now();
     auto t = (ed - op).count() * 1.0 / 1e9;
     return t;
