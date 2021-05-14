@@ -18,10 +18,8 @@ __kernel void conv(
             int hhh=dh+1, www=dw+1;
             if(ww>=0 && ww<W && hh>=0 && hh<H){
                 for(int ci=0;ci<CI;ci++){
-                    //acc+=weight[co][ci][hh][ww]*image[ci][hh][ww]
                     acc+=weight[co*CI*3*3+ci*3*3+hhh*3+www]*image[ci*H*W+hh*W+ww];
                 }
-                //dst[co][h][w]+=acc;
             }
         }
     }
@@ -39,7 +37,6 @@ __kernel void fc(
     int co=get_global_id(0); //only one dimension
     int acc=0;
     for(int ci=0;ci<CI;ci++){
-        //acc+=feature[ci]*weight[ci][co];
         acc+=feature[ci]*weight[ci*CO+co];
     }
     dst[co]=acc;
@@ -77,12 +74,10 @@ __kernel void pool(
     for(int dh=0;dh<=1;dh++){
         for(int dw=0;dw<=1;dw++){
             int h=ho*2+dh, w=wo*2+dw;
-            //result=max(result, feature[c][h][w]);
             if(h>=0&&h<H&&w>0&&w<W)
                 result=max(result, feature[c*H*W+h*W+w]);
         }
     }
-    //dst[c][ho][wo]=result;
     dst[c*HO*WO+ho*WO+wo]=result;
 }
 
@@ -95,6 +90,4 @@ __kernel void relu(
         int c=get_global_id(2);
         int pos=c*H*W+h*W+w;
         dst[pos]=max(0, feature[pos]);
-        //if(feature[pos]>=0) dst[pos]=feature[pos];
-        //else dst[pos]=0;
 }

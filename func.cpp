@@ -2,8 +2,8 @@
 // Created by hiro on 2021/5/12.
 //
 
-#ifndef OPENCL_CNN_CONV_FUNC_H
-#define OPENCL_CNN_CONV_FUNC_H
+#ifndef OPENCL_CNN_CONV_FUNC_CPP
+#define OPENCL_CNN_CONV_FUNC_CPP
 
 #include <bits/stdc++.h>
 
@@ -101,4 +101,4 @@ void cpu_relu(size_t C, size_t H, size_t W,
     }
 }
 
-#endif //OPENCL_CNN_CONV_FUNC_H
+#endif //OPENCL_CNN_CONV_FUNC_CPP

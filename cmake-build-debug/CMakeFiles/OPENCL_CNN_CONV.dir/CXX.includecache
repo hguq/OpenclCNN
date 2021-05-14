@@ -6,21 +6,33 @@
 
 #IncludeRegexTransform: 
 
-C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cnn.h
+C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cnn.cpp
 CL/opencl.h
 -
 FreeImage/FreeImage.h
 -
-func.h
-C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/func.h
+func.cpp
+C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/func.cpp
 
-C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/func.h
+C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/func.cpp
 bits/stdc++.h
 -
 
 C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/main.cpp
-cnn.h
-C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cnn.h
-iomanip
+cnn.cpp
+C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cnn.cpp
+timer.cpp
+C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/timer.cpp
+util.cpp
+C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/util.cpp
+
+C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/timer.cpp
+chrono
+-
+
+C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/util.cpp
+bits/stdc++.h
+-
+FreeImage/FreeImage.h
 -
 

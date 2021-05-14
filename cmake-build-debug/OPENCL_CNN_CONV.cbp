@@ -82,12 +82,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/cnn.h">
-			<Option target="OPENCL_CNN_CONV"/>
-		</Unit>
-		<Unit filename="C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/func.h">
-			<Option target="OPENCL_CNN_CONV"/>
-		</Unit>
 		<Unit filename="C:/projects/OpenclProjects/OPENCL_CNN_INTEGER/main.cpp">
 			<Option target="OPENCL_CNN_CONV"/>
 		</Unit>

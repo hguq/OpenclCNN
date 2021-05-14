@@ -2,12 +2,13 @@
 // Created by hiro on 2021/5/10.
 //
 
-#ifndef CNN_H
-#define CNN_H
+#ifndef OPENCL_CNN_CONV_CNN_CPP
+#define OPENCL_CNN_CONV_CNN_CPP
+
 
 #include <CL/opencl.h>
 #include <FreeImage/FreeImage.h>
-#include "func.h"
+#include "func.cpp"
 
 using namespace std;
 
@@ -20,9 +21,10 @@ public:
     cl_command_queue command_queue = nullptr;
     cl_kernel kernel = nullptr;
 
+    // Allocated opencl buffers. Will be released in destructor.
     vector<cl_mem> allocated;
 
-    // Set a pointer for cpu_out.
+    // Set a pointer for out_buff.
     // Set a mem buffer for opencl_out.
     // Both will be allocated in constructor.
     void *cpu_out = nullptr;
@@ -55,7 +57,6 @@ public:
 class conv_layer : public layer {
 public:
     size_t CI, CO, H, W;
-
     cl_mem opencl_weight = nullptr;
     signed char *cpu_weight = nullptr;
 
@@ -66,24 +67,26 @@ public:
         // Create kernel
         kernel = clCreateKernel(program_, "conv", &ret);
         check
-
-
         // Save cpu opencl_weight and allocate space for cpu output
         cpu_weight = weight_ptr;
         cpu_out = new int32_t[CO * H * W];
-
         // Create opencl_weight and result buffer;
-        opencl_weight = clCreateBuffer(context_, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-                                       CO * CI * 3 * 3 * sizeof(signed char), (void *) weight_ptr, &ret);
+        opencl_weight = clCreateBuffer(context_,
+                                       CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, // Token
+                                       CO * CI * 3 * 3 * sizeof(signed char), // Size
+                                       (void *) weight_ptr, // Host ptr
+                                       &ret);
         check
-        opencl_out = clCreateBuffer(context_, CL_MEM_READ_WRITE,
-                                    CO * H * W * sizeof(int32_t), nullptr, &ret);
+        // Create output buffer.
+        opencl_out = clCreateBuffer(context_,
+                                    CL_MEM_READ_WRITE, // Token
+                                    CO * H * W * sizeof(int32_t), // Size
+                                    nullptr, // Host ptr
+                                    &ret);
         check
-
         // Record allocated cl mem
         allocated.push_back(opencl_weight);
         allocated.push_back(opencl_out);
-
         // Specify work dimension
         global_work_size = new size_t[3]{H, W, CO};
         local_work_size = nullptr;
@@ -93,7 +96,9 @@ public:
     void *cpu_forward(void *input) override {
         // Call cpu version conv function here
         cpu_conv(CI, CO, H, W,
-                 (const signed char *) cpu_weight, (const unsigned char *) input, (int32_t *) cpu_out);
+                 (const signed char *) cpu_weight,
+                 (const unsigned char *) input,
+                 (int32_t *) cpu_out);
         return cpu_out;
     }
 
@@ -129,10 +134,8 @@ public:
                                      nullptr // Bounding event
         );
         check
-
         return opencl_out;
     }
-
 
     ~conv_layer() override {
         delete[] cpu_weight;
@@ -159,11 +162,17 @@ public:
         cpu_out = new int32_t[CO];
 
         // Create opencl_weight and result buffer;
-        opencl_weight = clCreateBuffer(context_, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR,
-                                       CI * CO * sizeof(signed char), (void *) weight_ptr, &ret);
+        opencl_weight = clCreateBuffer(context_,
+                                       CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, // token
+                                       CI * CO * sizeof(signed char), // size
+                                       (void *) weight_ptr, // host ptr
+                                       &ret);
         check
-        opencl_out = clCreateBuffer(context_, CL_MEM_READ_WRITE,
-                                    CO * sizeof(int32_t), nullptr, &ret);
+        opencl_out = clCreateBuffer(context_,
+                                    CL_MEM_READ_WRITE,
+                                    CO * sizeof(int32_t),
+                                    nullptr,
+                                    &ret);
         check
 
         allocated.push_back(opencl_weight);
@@ -326,7 +335,11 @@ public:
         cpu_out = new signed char[C * HO * WO];
 
         // Create opencl_weight and result buffer;
-        opencl_out = clCreateBuffer(context_, CL_MEM_READ_WRITE, C * HO * WO * sizeof(signed char), nullptr, nullptr);
+        opencl_out = clCreateBuffer(context_,
+                                    CL_MEM_READ_WRITE,
+                                    C * HO * WO * sizeof(signed char),
+                                    nullptr,
+                                    nullptr);
 
         allocated.push_back(opencl_out);
 
@@ -393,7 +406,11 @@ public:
         cpu_out = new unsigned char[C * H * W];
 
         // Create opencl_weight and result buffer;
-        opencl_out = clCreateBuffer(context_, CL_MEM_READ_WRITE, C * H * W * sizeof(unsigned char), nullptr, nullptr);
+        opencl_out = clCreateBuffer(context_,
+                                    CL_MEM_READ_WRITE,
+                                    C * H * W * sizeof(unsigned char),
+                                    nullptr,
+                                    nullptr);
 
         allocated.push_back(opencl_out);
 
@@ -443,24 +460,28 @@ public:
 };
 
 class cnn {
+    // Input image size, output feature size.
+    size_t IMAGE_C, IMAGE_H, IMAGE_W, FEATURE;
+    // Opencl related variables.
     cl_platform_id platform = nullptr;
     cl_device_id device = nullptr;
     cl_context context = nullptr;
     cl_command_queue command_queue = nullptr;
     cl_program program = nullptr;
 
+    // Create opencl input buffer
+    // set a output buffer for both opencl and cpu inference
     cl_mem opencl_in = nullptr;
-    cl_mem opencl_out = nullptr;
-    signed char *cpu_out = nullptr;
+    signed char *out_buff = nullptr;
 
+    // Container of layers.
     vector<layer *> layers;
 
-    size_t IMAGE_C, IMAGE_H, IMAGE_W, FEATURE;
 public:
     void parse_model_file(const string &model_file) {
         ifstream fs(model_file);
         string s;
-        int tmp;
+        int param;
         while (fs >> s) {
             if (s == "CONV") {
                 int CO, CI, H, W;
@@ -478,8 +499,8 @@ public:
                     for (int ci = 0; ci < CI; ci++) {
                         for (int h = 0; h < 3; h++) {
                             for (int w = 0; w < 3; w++) {
-                                fs >> tmp;
-                                weight_ptr[co * CI * 3 * 3 + ci * 3 * 3 + h * 3 + w] = tmp;
+                                fs >> param;
+                                weight_ptr[co * CI * 3 * 3 + ci * 3 * 3 + h * 3 + w] = param;
                             }
                         }
                     }
@@ -495,8 +516,8 @@ public:
                 auto weight_ptr = new signed char[CI * CO];
                 for (int ci = 0; ci < CI; ci++) {
                     for (int co = 0; co < CO; co++) {
-                        fs >> tmp;
-                        weight_ptr[ci * CO + co] = tmp;
+                        fs >> param;
+                        weight_ptr[ci * CO + co] = param;
                     }
                 }
                 layers.emplace_back(new fc_layer(context, command_queue, program, CI, CO, weight_ptr));
@@ -534,14 +555,14 @@ public:
                 fs >> s;
                 assert(s == "BIAS");
                 for (int c = 0; c < C; c++) {
-                    fs >> tmp;
-                    bias_ptr[c] = tmp;
+                    fs >> param;
+                    bias_ptr[c] = param;
                 }
                 fs >> s;
                 assert(s == "SHIFT");
                 for (int c = 0; c < C; c++) {
-                    fs >> tmp;
-                    shift_ptr[c] = tmp;
+                    fs >> param;
+                    shift_ptr[c] = param;
                 }
                 layers.emplace_back(new quan_layer(context, command_queue, program, C, H, W, bias_ptr, shift_ptr));
             } else {
@@ -551,12 +572,11 @@ public:
         }
     }
 
-    cnn(size_t IMAGE_C_, size_t IMAGE_H_, size_t IMAGE_W_, size_t FEATURE_,
-        const string &kernel_file, const string &model_file) :
-            IMAGE_C(IMAGE_C_), IMAGE_H(IMAGE_H_), IMAGE_W(IMAGE_W_), FEATURE(FEATURE_) {
+    cnn(size_t C_, size_t H_, size_t W_, size_t FEATURE_, const string &kernel_file, const string &model_file) :
+            IMAGE_C(C_), IMAGE_H(H_), IMAGE_W(W_), FEATURE(FEATURE_) {
         opencl_init(kernel_file);
         parse_model_file(model_file);
-        cpu_out = new signed char[FEATURE];
+        out_buff = new signed char[FEATURE];
     }
 
     static string read_file(const string &file_path) {
@@ -571,13 +591,11 @@ public:
         check
         ret = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 1, &device, nullptr);
         check
-
         // Create context & queue.
         context = clCreateContext(nullptr, 1, &device, nullptr, nullptr, &ret);
         check
         command_queue = clCreateCommandQueue(context, device, CL_QUEUE_PROFILING_ENABLE, &ret);
         check
-
         // Read program source file & create kernel
         string src = read_file(kernel_file);
         program = clCreateProgramWithSource(context, 1, (const char **) &src, nullptr, &ret);
@@ -592,14 +610,13 @@ public:
             cout << build_log;
             exit(1);
         }
-        opencl_in = clCreateBuffer(context, CL_MEM_READ_ONLY,
-                                   IMAGE_C * IMAGE_H * IMAGE_W * sizeof(unsigned char), nullptr, &ret);
-        check
-        opencl_out = clCreateBuffer(context, CL_MEM_WRITE_ONLY,
-                                    FEATURE * sizeof(signed char), nullptr, &ret);
+        opencl_in = clCreateBuffer(context,
+                                   CL_MEM_READ_ONLY, // Token
+                                   IMAGE_C * IMAGE_H * IMAGE_W * sizeof(unsigned char), // buffer size
+                                   nullptr,  // host ptr
+                                   &ret);
         check
     }
-
 
     void opencl_release() {
         // Release.
@@ -609,7 +626,6 @@ public:
         clReleaseCommandQueue(command_queue);
         clReleaseContext(context);
     }
-
 
     ~cnn() {
         opencl_release();
@@ -634,46 +650,37 @@ public:
     }
 
     size_t opencl_forward(unsigned char *image) {
-        ret = clEnqueueWriteBuffer(command_queue, opencl_in, CL_TRUE, 0,
-                                   IMAGE_C * IMAGE_H * IMAGE_W * sizeof(unsigned char),
-                                   image, 0, nullptr, nullptr);
+        ret = clEnqueueWriteBuffer(command_queue,
+                                   opencl_in,
+                                   CL_FALSE,  // Block writing. If blocking, this function will finish queue.
+                                   0, // Offset
+                                   IMAGE_C * IMAGE_H * IMAGE_W * sizeof(unsigned char), // Size
+                                   image,
+                                   0,  // wait number
+                                   nullptr, // wait list
+                                   nullptr); // bounding event
         check
-        cl_mem opencl_cur = opencl_in;
-        for (auto layer:layers) {
-            opencl_cur = layer->opencl_forward(opencl_cur);
-        }
-
-        opencl_out = opencl_cur;
-        ret = clEnqueueReadBuffer(command_queue, opencl_out, CL_TRUE, 0, FEATURE * sizeof(signed char),
-                                  cpu_out, 0, nullptr, nullptr);
+        cl_mem cur = opencl_in;
+        for (auto layer:layers) cur = layer->opencl_forward(cur);
+        ret = clEnqueueReadBuffer(command_queue,
+                                  cur,
+                                  CL_TRUE, // Block reading. Finish queue and read.
+                                  0, // offset
+                                  FEATURE * sizeof(signed char), // read size
+                                  out_buff,
+                                  0,
+                                  nullptr,
+                                  nullptr);
         check
-        return argmax(cpu_out, FEATURE);
+        return argmax(out_buff, FEATURE);
     }
 
     size_t cpu_forward(unsigned char *image) {
         void *cur = image;
-        //for (auto layer:layers)
-        //    cur = layer->cpu_forward(cur);
-        for (auto &layer : layers)
-            cur = layer->cpu_forward(cur);
-        memcpy(cpu_out, cur, FEATURE * sizeof(signed char)); // quantized output
-        return argmax(cpu_out, FEATURE);
+        for (auto &layer : layers)cur = layer->cpu_forward(cur);
+        return argmax((signed char *) cur, FEATURE);
     }
 };
 
-void load_image(const string &file_path, void *buffer, size_t &w, size_t &h) {
-    auto image = FreeImage_Load(FreeImage_GetFileType(file_path.c_str(), 0), file_path.c_str());
-    auto temp = image;
-    image = FreeImage_ConvertTo32Bits(image); // Here, 32 bits means 4 bytes for one pixel, including A
-    FreeImage_Unload(temp);
 
-    // Get width and height
-    w = FreeImage_GetWidth(image);
-    h = FreeImage_GetHeight(image);
-
-    memcpy(buffer, FreeImage_GetBits(image), w * h * 4);
-    FreeImage_Unload(image);
-}
-
-
-#endif //CNN_H
+#endif
