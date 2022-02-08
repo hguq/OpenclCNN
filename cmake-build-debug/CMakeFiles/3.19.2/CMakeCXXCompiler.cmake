@@ -19,6 +19,7 @@ set(CMAKE_CXX_SIMULATE_VERSION "")
 
 
 
+
 set(CMAKE_AR "C:/programs/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/ar.exe")
 set(CMAKE_CXX_COMPILER_AR "C:/programs/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/gcc-ar.exe")
 set(CMAKE_RANLIB "C:/programs/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/ranlib.exe")

@@ -1,3 +1,4 @@
+
 __kernel void conv(
     ulong CI, ulong CO, ulong H, ulong W,  // size
     __global const signed char *weight,

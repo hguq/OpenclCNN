@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const char IMAGE_DIR[] = "C:/projects/datasets/mnist/test_images/";
+const char IMAGE_DIR[] = "../test_images/";
 const char IMAGE_LIST_FILE[] = "../image_list.txt";
 const char KERNEL_FILE[] = "../kernel.cl";
 const char MODEL_FILE[] = "../model.txt";
@@ -20,20 +20,14 @@ int main() {
                      KERNEL_FILE, MODEL_FILE);
 
     int correct = 0;
-    //start_timer();
     for (int i = 0; i < N_TESTS; i++)if (cnn_instance.opencl_forward(images[i]) == labels[i])++correct;
-    //float time = end_timer();
 
-    //cout << "OPENCL TIME: " << time << " sec." << endl;
     cout << "OPENCL CORRECT: " << correct << '/' << N_TESTS << endl;
     cnn_instance.report_opencl_time();
 
     correct = 0;
-    //start_timer();
     for (int i = 0; i < N_TESTS; i++)if (cnn_instance.cpu_forward(images[i]) == labels[i])++correct;
-    //time = end_timer();
 
-    //cout << "CPU TIME: " << time << " sec." << endl;
     cout << "CPU CORRECT: " << correct << '/' << N_TESTS << endl;
 
     cnn_instance.report_cpu_time();
